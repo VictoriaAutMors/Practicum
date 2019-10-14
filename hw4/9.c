@@ -44,7 +44,7 @@ struct Image openImage(char *filename) {
 }
 
 void saveImage(struct Image img, char *filename) {
-    int fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU);
+    int fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR);
     if (fd < 0) {
         err(STDOUT_FILENO, NULL);
         return;
@@ -65,6 +65,10 @@ void saveImage(struct Image img, char *filename) {
 }
 
 int main(int argc, char** argv) {
+    if (argc != 3) {
+        err(STDOUT_FILENO, NULL);
+        return 1;
+    }
     struct Image img = openImage(argv[1]);
     saveImage(img, argv[2]);
     for (int j = 0; j < img.h; j++) {
